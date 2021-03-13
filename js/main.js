@@ -95,7 +95,7 @@ const config2 = {
         {title: 'Avatar', value: 'avatar'},
         {title: 'Birthday', value: 'birthday'},
     ],
-    apiUrl: "http://mock-api.shpp.me/espiridonov/users",
+    apiUrl: "https://mock-api.shpp.me/espiridonov/users",
 }
 
 const users = [
