@@ -39,15 +39,17 @@ function loadDataUsers(config,data,body){
         getUsers(config).then((value) => {
             console.log(value)
             for (let prop in value.data) {
-                let tr = document.createElement("tr");
-                body.appendChild(tr);
+                if(value.data.hasOwnProperty(prop)) {
+                    let tr = document.createElement("tr");
+                    body.appendChild(tr);
 
-                for(let i of config.columns){
-                    let td = document.createElement("td");
-                    td.innerHTML = value.data[prop][i.value];
-                    tr.appendChild(td);
+                    for (let i of config.columns) {
+                        let td = document.createElement("td");
+                        td.innerHTML = value.data[prop][i.value];
+                        tr.appendChild(td);
+                    }
+                    addButtonRemove(tr, value.data[prop]["id"]);
                 }
-                addButtonRemove(tr, value.data[prop]["id"]);
             }
         });
     } else{
