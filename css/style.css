@@ -1,0 +1,66 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    background-color: aquamarine;
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.table__inner {
+    padding: 15px 0;
+}
+
+#usersTable {
+    display: flex;
+    justify-content: center;
+}
+
+#usersTable table {
+    font-family: 'Roboto Condensed', sans-serif;
+    border-collapse: collapse;
+    border: 2px solid grey;
+    /*border-radius: 5px;*/
+    width: 100%;
+    text-align: center;
+}
+
+#usersTable thead tr {
+    background-color: rgb(255, 119, 0);
+}
+
+#usersTable tbody tr {
+    background-color: rgb(250, 207, 7);
+}
+
+#usersTable tbody tr:hover {
+    background-color: rgb(74, 210, 37);
+}
+
+#usersTable th {
+    border: 2px solid grey;
+}
+
+#usersTable td {
+    border: 2px solid grey;
+}
+
+.btn-remove{
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    background-color: orangered;
+    border-style: none;
+    width: 100%;
+    height: 100%;
+}
+
+.btn-remove:hover{
+    outline: 2px solid black;
+}
