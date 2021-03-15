@@ -1,79 +1,78 @@
+let userTable = document.getElementById("usersTable")
+    .appendChild(document.createElement("table"));
+const HEAD = userTable.appendChild(document.createElement("thead"))
+    .appendChild(document.createElement("tr"));
+const BODY = userTable
+    .appendChild(document.createElement("tbody"));
+
 function DataTable(config, data) {
-    let table = document.createElement("table");
-    let thead = document.createElement("thead");
-    let tbody = document.createElement("tbody");
-    let tr = document.createElement("tr");
+    createTableHead(config)
+    createTableBody(config, data)
+}
 
-    let usersTable = document.getElementById("usersTable");
-    let readyTable = usersTable.appendChild(table);
-
-    let head = readyTable.appendChild(thead).appendChild(tr);
+function createTableHead(config) {
     config.columns.forEach((attr) => {
         let column = document.createElement("th");
         column.innerHTML = attr.title;
-        head.appendChild(column);
+        HEAD.appendChild(column);
     })
     let c = document.createElement("th");
     c.innerHTML = "Action";
-    head.appendChild(c);
-
-    let body = readyTable.appendChild(tbody);
-
-    loadDataUsers(config,data,body)
-
+    HEAD.appendChild(c);
 }
 
-function loadDataUsers(config,data,body){
-    if (data) {
-        data.forEach((attr) => {
-            let tr = document.createElement("tr");
-            body.appendChild(tr);
+function createTableRow() {
+    let tableRow = document.createElement("tr")
+    BODY.appendChild(tableRow)
+    return tableRow;
+}
 
-            for (let i of config.columns) {
+function fillUpTableRow(configTable, users) {
+    for (let prop in users) {
+        if (users.hasOwnProperty(prop)) {
+            let tableRow = createTableRow();
+            for (let i of configTable.columns) {
                 let td = document.createElement("td");
-                td.innerHTML = attr[i.value];
-                tr.appendChild(td);
+                td.innerHTML = users[prop][i.value];
+                tableRow.appendChild(td);
             }
-        })
-    } else if (config.apiUrl) {
-        getUsers(config).then((value) => {
-            console.log(value)
-            for (let prop in value.data) {
-                if(value.data.hasOwnProperty(prop)) {
-                    let tr = document.createElement("tr");
-                    body.appendChild(tr);
-
-                    for (let i of config.columns) {
-                        let td = document.createElement("td");
-                        td.innerHTML = value.data[prop][i.value];
-                        tr.appendChild(td);
-                    }
-                    addButtonRemove(tr, value.data[prop]["id"]);
-                }
-            }
-        });
-    } else{
-        console.log("users not found")
+            addButtonRemove(tableRow, users[prop]["id"], configTable.apiUrl);
+        }
     }
 }
 
-function addButtonRemove(toElement,id){
+function addButtonRemove(toElement, id, url) {
     let td = document.createElement("td");
     let button = document.createElement("button");
     button.classList.add("btn-remove")
     button.innerHTML = "X";
-    button.addEventListener("click",function (){
-        alert("User ID: " + id);
+    button.addEventListener("click", () => {
+        deleteUser(id, url).then()
     })
     td.appendChild(button)
     toElement.appendChild(td)
 }
 
-function getIDUserAfterClickRemove(){
-    let elements = document.getElementsByClassName("btn-remove");
-    for(let i = 0; i<elements.length;i++){
-        console.log(elements[i])
+function createTableBody(config, data) {
+    if (data) {
+        fillUpTableRow(config, data)
+    } else if (config.apiUrl) {
+        getRemoteUsers(config).then((value) => {
+            console.log(value)
+            fillUpTableRow(config, value.data)
+        });
+    } else {
+        console.error("users not found")
     }
+}
+
+async function deleteUser(id, url) {
+    const user = url + "/" + id;
+    alert("User ID: " + id + " url: " + user);
+    // const response = await fetch(user, {method: "DELETE"})
+    // if (response.ok){
+    //     createTableBody()
+    // }
 }
 
 const config1 = {
@@ -83,7 +82,7 @@ const config1 = {
         {title: 'Фамилия', value: 'surname'},
         {title: 'Возраст', value: 'age'},
     ],
-    apiUrl: "http://mock-api.shpp.me/espiridonov/users",
+    // apiUrl: "https://mock-api.shpp.me/espiridonov/users",
 };
 
 const config2 = {
@@ -110,7 +109,7 @@ const users = [
     {id: 30055, name: 'Захар', surname: 'Игнатьев', age: 29},
 ];
 
-async function getUsers(config) {
+async function getRemoteUsers(config) {
     const response = await fetch(config.apiUrl);
     return await response.json();
 }
